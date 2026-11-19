@@ -2,7 +2,7 @@
 (() => {
 'use strict';
 const T = THREE, D2R = Math.PI / 180;
-const VR = window.VR = { T, version: 24 };
+const VR = window.VR = { T, version: 25 };
 const $ = VR.$ = id => document.getElementById(id);
 VR.clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 VR.lerp = (a, b, t) => a + (b - a) * t;
@@ -32,6 +32,7 @@ const DEF = {
   pongLvl: 1, pongTo: 11, pongAssist: 0.5, pongHand: 0, pongAuto: true, pongH: 1.0,
   sinLvl: 1, sinAssist: 0.5, sinGuide: true, sinHand: 0, sinH: 0.85,
   bindJump: '', bindCrouch: '', ctlCrouchMode: 0,
+  trkSens: 1, kbSize: 1.3, kbSurface: true, kbPrecise: true, kbSound: true,
   bsSong: 0, bsLvl: 1, bsSabers: 2, bsHand: 0, bsH: -0.3, bsSpread: 1, bsLen: 0.9, bsMin: 0.8, bsDir: true, bsBombs: true, bsNoFail: false, bsLat: 0, bsVol: 0.8
 };
 const S = VR.S = Object.assign({}, DEF, {
@@ -237,6 +238,7 @@ function updateHud() {
     `FPS ${S.fps}  res ${renderer.getPixelRatio().toFixed(2)}  sensor ${haveOri ? (age < 500 ? 'OK' : 'PERDIDO') : '—'}  inválidos ${S.invalid}\n` +
     `alpha ${f(S.a)}  beta ${f(S.b)}  gamma ${f(S.g)}\n` +
     `mãos ${H.filter(h => h && h.vis).length}  rastreio ${S.trkHz.toFixed(0)} Hz  inferência ${S.inferMs.toFixed(0)} ms  idade do quadro ${S.camAge.toFixed(0)} ms\n` +
+    `gestos ${H.filter(h => h && h.vis).map(h => (h.right ? 'D' : 'E') + ':' + h.gesture).join('  ') || '—'}\n` +
     `câmera ${S.handsReady ? 'ON' : 'off'}  modelo ${S.cx ? 'alta' : 'rápida'}  ambiente ${S.env}`;
 }
 VR.start = () => requestAnimationFrame(frame);

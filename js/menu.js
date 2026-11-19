@@ -31,10 +31,17 @@ const PAGES = [
     R.choice('Tom da pele', 'skin', VR.SKINS.map((k, i) => [i, k.n, '#' + k.c.toString(16).padStart(6, '0')]), { swatch: true, on: v => VR.handvis.setSkin(v), show: () => S.hand === 'model' }),
     R.choice('Número de mãos', 'maxHands', [[1, '1 mão'], [2, '2 mãos']], { on: () => VR.tracker.setOpts() }),
     R.toggle('Inverter esquerda/direita', 'swapHands', { sub: 'Use se a mão realista aparecer espelhada' }),
-    R.toggle('Clique segurando o dedo', 'dwell', { sub: 'Segure o ponteiro 1 s sobre um botão' })
+    R.toggle('Clique segurando o dedo', 'dwell', { sub: 'Segure o ponteiro 1 s sobre um botão' }),
+    R.head('Teclado de superfície'),
+    R.button('Abrir teclado (teste)', () => { VR.kb.open({ label: 'Teste do teclado' }); }, { icon: 'keyboard', sub: 'Mesa: apoie as mãos abertas e fique parado' }),
+    R.slider('Tamanho do teclado', 'kbSize', 0.9, 2.0, 0.05, v => v.toFixed(2) + '×'),
+    R.toggle('Calibrar na mesa ao abrir', 'kbSurface', { sub: 'Desligado: abre flutuando (pinça)' }),
+    R.toggle('Precisão alta ao digitar', 'kbPrecise', { sub: 'Usa o modelo preciso enquanto o teclado está aberto' }),
+    R.toggle('Som das teclas', 'kbSound')
   ] },
   { id: 'rast', label: 'Rastreamento', icon: 'target', rows: () => [
     R.choice('Precisão', 'cx', [[0, 'Rápida'], [1, 'Alta']], { sub: 'Alta usa mais bateria', set: v => { VR.tracker.setPrecision(!!v).then(ok => { if (ok) ui.panels.settings.dirty = true; }); }, get: () => S.cx }),
+    R.choice('Sensibilidade do rastreio', 'trkSens', [[0, 'Estável'], [1, 'Normal'], [2, 'Sensível']], { sub: 'Sensível segura a mão em poses difíceis', on: () => VR.tracker.setOpts() }),
     R.slider('Suavização das mãos', 'smoothH', 0, 1, 0.05, pct),
     R.slider('Antecipação (compensa atraso)', 'lead', 0, 100, 5, ms),
     R.choice('Taxa de rastreamento', 'rate', [[0, 'Auto'], [20, '20 Hz'], [30, '30 Hz'], [60, '60 Hz']], { on: () => VR.tracker.autoRate() }),

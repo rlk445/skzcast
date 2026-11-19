@@ -12,6 +12,7 @@ const rr = ui.rr = (g, x, y, w, h, r) => { r = Math.min(r, w / 2, h / 2); g.begi
 const text = ui.text = (g, s, x, y, size, color, align = 'left', weight = 500) => { g.font = weight + ' ' + size + 'px ' + FONT; g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); };
 const IC = {
   home: ['M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'],
+  keyboard: ['M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z', 'M6 9h.01', 'M10 9h.01', 'M14 9h.01', 'M18 9h.01', 'M8 13h.01', 'M12 13h.01', 'M16 13h.01', 'M7 16h10'],
   hand: ['M18 11V6a2 2 0 0 0-4 0', 'M14 10V4a2 2 0 0 0-4 0v2', 'M10 10.5V6a2 2 0 0 0-4 0v8', 'M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15'],
   camera: ['M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z', 'M12 9a4 4 0 1 0 0 8a4 4 0 0 0 0-8z'],
   vr: ['M3 8h18a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-5l-2-3h-4l-2 3H3a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z'],
@@ -140,6 +141,7 @@ const D = {
     for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) { g.beginPath(); g.arc(cx + (i - 1) * 17, cy + (j - 1) * 17, 5.4, 0, 7); g.fillStyle = w.prs ? '#10131a' : '#fff'; g.fill(); } },
   text(g, w) { text(g, typeof w.label === 'function' ? w.label() : w.label, w.x, w._y + w.h / 2, w.size || 26, w.color || C.txt, w.align || 'left', w.weight || 500); }
 };
+ui.D = D;                                                            // permite que outros módulos (teclado) registrem novos widgets
 const CLICK = { button: 1, toggle: 1, choice: 1, tab: 1, dock: 1, tile: 1, card: 1, x: 1, orb: 1 };
 
 // ---------- painel ----------
@@ -219,10 +221,10 @@ ui.anyVisible = () => ui.list.some(p => p.vis && p.space === 'world');
 ui.openWin = id => { const p = ui.panels[id]; if (!p) return; if (p.primary) ui.list.forEach(q => { if (q.primary && q !== p) ui.show(q, false); }); ui.show(p, true); ui.menuOpen = true; ui.show(ui.panels.dock, true); ui.show(ui.panels.orb, false); };
 ui.closeWin = id => { const p = ui.panels[id]; if (p) ui.show(p, false); if (id === 'dock') ui.closeMenu(); };
 ui.toggleWin = id => { const p = ui.panels[id]; if (!p) return; if (p.vis) ui.closeWin(id); else ui.openWin(id); };
-ui.closeMenu = () => { ui.menuOpen = false; ui.list.forEach(p => { if (p.space === 'world' && p.id !== 'yt') ui.show(p, false); }); ui.show(ui.panels.orb, true); };
+ui.closeMenu = () => { ui.menuOpen = false; ui.list.forEach(p => { if (p.space === 'world' && p.id !== 'yt' && !p.keep) ui.show(p, false); }); ui.show(ui.panels.orb, true); };
 ui.openMenu = () => { ui.menuOpen = true; ui.show(ui.panels.dock, true); ui.show(ui.panels.orb, false); if (!ui.list.some(p => p.primary && p.vis)) ui.show(ui.panels[ui.lastPrimary || 'quick'], true); };
 ui.toggleMenu = () => { if (ui.menuOpen) ui.closeMenu(); else ui.openMenu(); };
-ui.replaceAll = () => ui.list.forEach(p => { if (p.space === 'world' && p.vis) ui.place(p, p.dist, p.dy, p.dx); });   // reposiciona as janelas à frente (depois de recentralizar)
+ui.replaceAll = () => ui.list.forEach(p => { if (p.space === 'world' && p.vis && !p.fixedPose) ui.place(p, p.dist, p.dy, p.dx); });   // reposiciona as janelas à frente (depois de recentralizar)
 VR.onRecenter.push(() => ui.replaceAll());
 
 // ---------- ponteiros: 0/1 = mãos (pinça), 2 = mouse/toque ----------

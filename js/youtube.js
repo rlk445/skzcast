@@ -22,7 +22,10 @@ const yt = ui.panel({ id: 'yt', mw: 1.1, mh: 0.88, title: 'YouTube', titleIcon: 
     const y = VY + VH + 14, mk = (x, w, label, icon, fn) => ({ t: 'button', x, y, w, h: 74, label, icon, chev: false, onClick: fn });
     return [mk(25, 210, () => playing ? 'Pausar' : 'Tocar', 'play', () => { playing = !playing; cmd(playing ? 'playVideo' : 'pauseVideo', [], true); p.dirty = true; }),
       mk(250, 130, '− Vol', null, () => { setVolume(clamp(S.ytVol - 10, 0, 100)); VR.save(); }), mk(392, 130, '+ Vol', null, () => { setVolume(clamp(S.ytVol + 10, 0, 100)); VR.save(); }),
-      mk(535, 210, 'Alterar link', null, () => { let v = ''; try { v = prompt('Cole o link do YouTube:', localStorage.getItem('ytlink') || '') || ''; } catch (e) {} if (v && !setLink(v)) VR.toast('Link do YouTube não reconhecido'); })];
+      mk(535, 210, 'Alterar link', null, () => {
+        const apply = v => { if (v && !setLink(v)) VR.toast('Link do YouTube não reconhecido'); };
+        if (VR.kb) { let cur = ''; try { cur = localStorage.getItem('ytlink') || ''; } catch (e) {} VR.kb.open({ label: 'Link do YouTube', value: cur, onEnter: apply }); return; }   // teclado dentro do VR (o prompt() não aparece na tela dividida)
+        let v = ''; try { v = prompt('Cole o link do YouTube:', localStorage.getItem('ytlink') || '') || ''; } catch (e) {} apply(v); })];
   } });
 yt.fixedNoSc = true;
 const pv = new T.Vector3(), pw = new T.Vector3(), a = new T.Vector3(), b = new T.Vector3();
