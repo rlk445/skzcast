@@ -1,0 +1,28 @@
+VR Protótipo v21 - Quarto 3D + Ping-Pong + Beat Saber
+
+O QUE MUDOU
+- NOVO: Beat Saber (Ambientes > Beat Saber, ou Ajustes > Beat Saber > Jogar). Opção de 1 SABRE ou 2 SABRES (vermelho = mão esquerda, azul = mão direita; com 1 sabre todos os blocos têm a cor do seu sabre e a mão é Auto/Direita/Esquerda). Os sabres ficam presos às suas mãos, com rastro de luz.
+  No lobby, corte os botões com o sabre: MÚSICA, NÍVEL, 1 SABRE, 2 SABRES e JOGAR. Corte cada bloco na direção da seta (ponto = qualquer direção) e desvie das bombas. Placar, combo, multiplicador x1/x2/x4/x8, energia, nota (SS a E) e recorde por música/nível/modo.
+  3 músicas sintetizadas na hora (Neon Pulse, Cyber Drive, Laser Storm) e 4 níveis (Fácil, Normal, Difícil, Expert); as fases são geradas no ritmo da música.
+  Ajustes: bombas, cortar na direção da seta, sem falhar, volume, altura e espaçamento dos blocos, comprimento do sabre, velocidade mínima do corte, ajuste de atraso.
+  PC sem mãos: o sabre segue o mouse; Tab troca de sabre, 1/2 escolhem o modo, Enter começa, Esc sai da partida.
+  Arquivos novos: js/bsmusic.js (música, sons e gerador de fases) e js/bs.js (jogo).
+- NOVO: Ping-Pong contra a IA (Ambientes > Ping-Pong, ou Ajustes > Ping-Pong > Jogar). A raquete fica presa à sua mão ABERTA (não precisa fechar): com a palma virada para a IA, empurre a mão para frente para bater. No saque, acerte a bolinha que flutua à sua frente (anel azul).
+  Dificuldade (Fácil, Médio, Difícil, Expert), "jogar até" 5/7/11/21, ajuda de mira, escolha da mão (auto/direita/esquerda), mesa que acompanha a altura da sua mão ou altura fixa. Teclas no PC: 1-4 dificuldade, N nova partida; sem mãos a raquete segue o mouse.
+  Regras: saque alterna a cada 2 pontos (a cada 1 no empate), vence quem chegar ao total com 2 de vantagem; bola na rede, fora ou que quica 2 vezes do lado do adversário dá ponto. Voleio (bater antes de quicar) é permitido. O jogo pausa com o menu aberto ou sem mão visível.
+  Arquivos novos: js/pongsim.js (regras, física e IA) e js/pong.js (visual e mão → raquete).
+- Mão realista (nova): malha 3D com dedos, unhas, polegar e pele, deformada por esqueleto sobre os pontos rastreados. Ajustes > Mãos (5 tons de pele). Contorno, Ossos e Oculta continuam.
+- Menu estilo Meta Quest DENTRO do VR: dock inferior, Ajustes rápidos, Configurações (7 categorias), Ambientes e YouTube. Tudo se opera com pinça (apontar + juntar polegar e indicador), arrastar sliders/lista com a pinça segurada, arrastar janelas pela barrinha. Também funciona por toque na tela. A tela inicial ficou só com Iniciar + link do YouTube.
+- Quarto 3D interativo (ambiente padrão): janela com a vista do panorama, interruptor, abajures, TV, monitor, porta, cortinas, dia/noite e 15 objetos para pegar/jogar (de perto com a mão fechada ou pinça; de longe apontando + pinça, aproximando/afastando a mão).
+- Removidos: criar boneco, sangue, facão, mesa com martelo/bazuca. A cidade destrutível continua como um ambiente opcional (sem ferramentas: pegue e jogue os blocos).
+- Rastreamento/FPS/atraso: câmera até 60 fps; MediaPipe só roda quando chega quadro novo (sem quadros repetidos); filtro One-Euro + antecipação (ms) + suavização por quadro; profundidade e pinça medidas em metros pelos pontos 3D; modelo "Alta precisão" agora incluso; taxa de rastreamento e resolução automáticas conforme o FPS; predição de movimento da cabeça e suavização adaptativa; configurações salvas no aparelho.
+
+ATALHOS (PC): M menu, R recentralizar, H modo OBS, V modo VR, WASD andar.
+Menu fechado: botão redondo embaixo da visão (pinça), botão ☰ ou segurar o dedo 1 s na tela.
+Hospede em HTTPS (como antes). Os arquivos de js/ têm ?v=20 para evitar cache antigo.
+
+IPA (iPhone) VIA GITHUB
+- A pasta ios/ e o arquivo .github/workflows/build-ipa.yml montam o app: um WebView com um servidor local dentro do app, que abre este mesmo site (câmera, mãos, sensores e som funcionam).
+- Suba tudo para um repositório no GitHub, aba Actions > Build IPA > Run workflow. Ao terminar, baixe o artefato SKZ-VR-ipa (SKZ-VR.ipa) e instale com o Sideloadly.
+- Toda vez que você trocar arquivos do site (js/, index.html...), é só enviar de novo e rodar o workflow: o site é copiado para dentro do app automaticamente.
+- Ícone do app: ios/Assets.xcassets/AppIcon.appiconset/icon-1024.png (também usado em icons/).
